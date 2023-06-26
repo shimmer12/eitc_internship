@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "name": "Python: Django",
+            "type": "python",
+            "request": "launch",
+            "program": "C:\\Users\\write\\Desktop\\Project\\SPAT\\SRSPRO\\fileExch\\manage.py",
+            "args": [
+                "runserver"
+            ],
+            "django": true,
+            "justMyCode": true
+        }
+    ]
+}
