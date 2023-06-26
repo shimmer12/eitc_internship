@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <style>
+    
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+  }
+
+  header {
+    background-color: #333;
+    padding: 20px;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  nav ul li {
+    margin-right: 10px;
+  }
+
+  nav ul li a {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .content {
+    padding: 20px;
+  }
+
+  form {
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  table {
+    width: 100%;
+  }
+
+  td {
+    padding: 5px;
+  }
+
+  button[type="submit"] {
+    margin-top: 10px;
+  }
+      </style>
+      
+</head>
+<body>
+    <header>
+        <h1>File Handler App</h1>
+        <nav>
+          <ul>
+            <li><a href="{% url 'display_files' %}">Files</a></li>
+            {% if user.is_authenticated %}
+              <li><a href="{% url 'logout' %}">Logout</a></li>
+            {% else %}
+              <li><a href="{% url 'login' %}">Login</a></li>
+              <li><a href="{% url 'register' %}">Sign Up</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </header>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+          {% for field in form %}
+          <tr>
+              <td>{{ field.label_tag }}</td>
+              <td>{{ field }}</td>
+          </tr>
+          {% endfor %}
+      </table>
+        <button type="submit"> Upload File </button>
+    </form>
+</body>
+</html>

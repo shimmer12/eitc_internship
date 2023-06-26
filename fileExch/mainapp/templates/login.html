@@ -1,0 +1,55 @@
+{% extends "mainapp/index.html" %}
+{% load crispy_forms_tags %}
+{% block start %}
+
+<style>
+  
+  form {
+    width: 100%;
+    max-width: 350px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  table {
+    width: 100%;
+  }
+
+  td {
+    padding: 5px;
+  }
+
+  button[type="submit"] {
+    margin-top: 10px;
+  }
+  
+</style>
+
+
+ <div class="content-section col-md-8 col-md-offset-2">
+  <center>
+    <br>
+  <form method="POST" style="border: 1px solid black; margin: 4%; padding:10%; border-radius:1%;">
+    {% csrf_token %}
+
+    {% for field in form %}
+      <p>
+        {{ field.label_tag }}<br>
+        {{ field }}
+        {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+      </p>
+    {% endfor %}   <center>
+      
+    <button style="background: #007bff; font-size: 2rem; padding: 1%; color: white;" class="btn btn-outline-info" type="submit"><span class="glyphicon glyphicon-log-in"></span> &nbsp; login</button>
+  </center>
+  <br/>
+  <sub style="text-align: left;"><a href="{% url 'register' %}" style="text-decoration: none; color: blue; padding:2%; cursor:pointer; margin-right:2%;">don't have account,sign up</a></sub>
+  </form>
+</center>
+ </div>
+{% endblock start %}

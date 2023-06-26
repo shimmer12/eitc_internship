@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Demo Gallery</title>
+    <style>
+        html, body, ul, li, h1, h2, p {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Basic styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        header {
+            background-color: #333;
+            padding: 20px;
+            color: #fff;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .table a {
+            color: blue;
+            text-decoration: none;
+        }
+
+        .container {
+            padding-top: 0%;
+        }
+
+        select {
+            margin-top: 10px;
+        }
+        #category-select {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#category-select option {
+  font-size: 14px;
+}
+
+    </style>
+    <style>
+        body {
+  font-family: Arial, sans-serif;
+  background: url(https://source.unsplash.com/vZlTg_McCDo/1600x900) no-repeat;
+  background-size: cover;
+  height: 100vh;
+}
+
+box h1 {
+  text-align: center;
+  font-family: Tahoma, Arial, sans-serif;
+  color: #06D85F;
+  margin: 80px 0;
+}
+
+.box {
+  width: 20%;
+  margin: 0 auto;
+  /* background:     rgba(255,255,255,0.2); */
+  padding: 35px;
+  /* border: 2px solid #fff; */
+  background-clip: padding-box;
+  text-align: center;
+}   
+
+.button {
+  font-size: 1em;
+  padding: 10px;
+  color: #fff;
+  border: 2px solid #06D85F;
+  border-radius: 20px/50px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+}
+.button:hover {
+  background: #06D85F;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  margin: 70px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 50%;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+.popup h2 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+.popup .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+.popup .close:hover {
+  color: #06D85F;
+}
+.popup .content {
+  max-height: 30%;
+  overflow: auto;
+}
+
+@media screen and (max-width: 700px){
+  .box{
+    width: 70%;
+  }
+  .popup{
+    width: 70%;
+  }
+}
+    </style>
+</head>
+<body class="container">
+  <header>
+    <h1>File Handler App</h1>
+    <nav>
+        <ul>
+            <li><a href="{% url 'display_files' %}">Files</a></li>
+            <li><a href="{% url 'upload_image' %}">New Files</a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+            {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'register' %}">Sign Up</a></li>
+            {% endif %}
+            {% if user.is_authenticated %}
+            <li><span class="username">Welcome, {{ username }}</span></li>  <!-- Display the username here -->
+            {% endif %}
+        </ul>
+    </nav>
+</header>   
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Download Link</th>
+                <th>Approver</th>
+                <th>History</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for x in data %}
+            {% if x.status == access_levels|first %}
+                <tr>
+                    <td>{{ x.title }}</td>
+                    <td>{{ x.status }}</td>
+                    <td><a href="{{ x.photo.url }}">Download File</a></td>
+                    <td>{{ x.approver }}</td>
+                    <td>{{ x.history }}</td>
+                    <td>
+                        <a href="/edit/{{ x.id }}"><span class="glyphicon glyphicon-pencil">Edit</span></a>
+                        <a href="/delete/{{ x.id }}">Delete</a>
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        
+        </tbody>
+    </table>
+
+    <div class="box">
+        <a class="button" href="#popup1">All Submitted Files</a>
+    </div>
+    
+    <div id="popup1" class="overlay">
+        <div class="popup">
+            <h2>All The Files:</h2>
+            <a class="close" href="#">&times;</a>
+            <div class="content">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Download Link</th>
+                            <th>Approver</th>
+                            <th>History</th>
+                        </tr>
+                    </thead>
+                
+                <tbody>
+                    {% for x in data %}
+                        {% if x.status == selected_category or selected_category == '' %}
+                        <tr>
+                            <td>{{ x.title }}</td>
+                            <td>{{ x.status }}</td>
+                            <td><a href="{{ x.photo.url }}">Download File</a></td>
+                            <td>{{ x.approver }}</td>
+                            <td>{{ x.history }}</td>
+                        
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+<!-- 
+    <select id="category-select">
+        <option value="">All</option>
+        <option value="Dispach">Dispach</option>
+        <option value="SectionOffice">Section Office</option>
+        <option value="HOD">Head of Department</option>
+    </select>
+    <span id="section-text">Section: All</span>
+    
+    <span>{{ access_levels|first }}</span>
+
+    <script>
+       document.addEventListener("DOMContentLoaded", function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var category = urlParams.get("category");
+            var sectionText = "Section: " + (category ? category : "All");
+            document.getElementById("section-text").textContent = sectionText;
+            
+            document.getElementById("category-select").addEventListener("change", function() {
+                var selectedCategory = this.value;
+                var sectionText = "Section: " + (selectedCategory ? selectedCategory : "All");
+                document.getElementById("section-text").textContent = sectionText;
+                window.location.href = "/?category=" + encodeURIComponent(selectedCategory);
+            });
+        });
+  </script> -->
+  
+</body>
+</html>
